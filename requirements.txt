@@ -10,3 +10,4 @@ Werkzeug==2.2.3
 langchain
 langchain-core
 langchain-google-genai
+dotenv
