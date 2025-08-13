@@ -4,11 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AI-Powered Health Diagnosis System</title>
-    <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='mediai_logo.png') }}">
     <meta name="theme-color" content="#0d0d0d">
-    <!--Boostrap_css-->
+    
+    <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         /* === GLOBAL STYLES === */
         body {
@@ -249,35 +251,34 @@
             font-size: 1rem;
             font-weight: 600;
         }
+        
         .badge {
-    font-size: 0.7rem;
-    font-weight: 500;
-    padding: 0.35em 0.65em;
-    border-radius: 0.75rem;
-    vertical-align: middle;
-}
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.35em 0.65em;
+            border-radius: 0.75rem;
+            vertical-align: middle;
+        }
 
-.bg-success {
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-}
-.bg-info {
-    background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-}
-/* Symptom card styling */
-.symptom-card .card-title {
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
+        .bg-success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        
+        .bg-info {
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+        }
+        
+        /* Symptom card styling */
+        .symptom-card .card-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
 
         /* === ANIMATIONS === */
         @media (max-width: 768px) {
-    .symptom-card .card-title {
-        font-size: 0.85rem;
-    }
-}
-
-        @media (max-width: 768px) {
+            .symptom-card .card-title {
+                font-size: 0.85rem;
+            }
             .badge {
                 font-size: 0.6rem;
                 padding: 0.25em 0.5em;
@@ -347,10 +348,72 @@
             border: 1px solid rgba(255, 107, 107, 0.5);
             border-radius: 0.75rem;
         }
+
+        /* Chat Interface Styles */
+        .chat-container {
+            background: rgba(20, 20, 30, 0.7);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .message {
+            margin-bottom: 1.2rem;
+            display: flex;
+        }
+        
+        .user-message {
+            justify-content: flex-end;
+        }
+        
+        .assistant-message {
+            justify-content: flex-start;
+        }
+        
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1.2rem;
+            position: relative;
+        }
+        
+        .user-message .message-bubble {
+            background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
+            border-bottom-right-radius: 0.3rem;
+        }
+        
+        .assistant-message .message-bubble {
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom-left-radius: 0.3rem;
+        }
+        
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            padding: 1rem;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 3px;
+            background: #42a5f5;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
+    
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -367,43 +430,83 @@
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- Add navbar items here if needed -->
-            </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent"></div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container mt-5">
-        <!-- Message Display -->
-        {% if message %}
+    <!-- Message Display -->
+    {% if message %}
+    <div class="container mt-3">
         <div class="alert alert-danger glass-card mb-4">
             {{ message|safe }}
         </div>
-        {% endif %}
-        
+    </div>
+    {% endif %}
+    
+    <!-- Animated Heading -->
+    <div class="container mt-5">
         <h1 id="animated-heading" class="text-center mb-4">
             <span id="typed-text"></span><span id="cursor">|</span>
         </h1>
+    </div>
 
+    <!-- Main Interface -->
+    <div class="container mt-5">
         <div class="glass-card p-4 mb-5">
-            <form action="/predict" method="post">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <label for="symptoms" class="form-label">Tell Us Your Symptoms:</label>
-                <input type="text" id="symptoms" name="symptoms" class="form-control input-field animated-placeholder mb-3" placeholder="e.g. itching, headache, nausea…">
-                <div id="suggestions-container" class="suggestions-box"></div>
-                <div id="transcription" class="mt-2 text-info"></div>
-
-                <div class="d-flex flex-wrap gap-2 mt-3">
-                    <button type="button" id="startSpeechRecognition" class="btn btn-gradient flex-grow-1">
-                        🩺 Talk to Diagnose
+            <!-- Mode Toggle -->
+            <div class="d-flex justify-content-center mb-4">
+                <div class="btn-group" role="group">
+                    <button type="button" id="diagnosisModeBtn" class="btn btn-gradient">
+                        <i class="fas fa-stethoscope me-2"></i>Diagnosis Mode
                     </button>
-                    <button type="submit" class="btn btn-gradient flex-grow-1" id="predictBtn">
-                        <span id="btnText">Predict</span>
-                        <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                    <button type="button" id="chatModeBtn" class="btn btn-outline-light">
+                        <i class="fas fa-comments me-2"></i>Chat Mode
                     </button>
                 </div>
-            </form>
+            </div>
+
+            <!-- Diagnosis Form (Default) -->
+            <div id="diagnosisForm">
+                <form action="/predict" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label for="symptoms" class="form-label">Tell Us Your Symptoms:</label>
+                    <input type="text" id="symptoms" name="symptoms" class="form-control input-field animated-placeholder mb-3" placeholder="e.g. itching, headache, nausea…">
+                    <div id="suggestions-container" class="suggestions-box"></div>
+                    <div id="transcription" class="mt-2 text-info"></div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button type="button" id="startSpeechRecognition" class="btn btn-gradient flex-grow-1">
+                            🩺 Talk to Diagnose
+                        </button>
+                        <button type="submit" class="btn btn-gradient flex-grow-1" id="predictBtn">
+                            <span id="btnText">Predict</span>
+                            <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Chat Interface (Hidden) -->
+            <div id="chatInterface" style="display: none;">
+                <div class="chat-container glass-card mb-3" style="height: 400px; overflow-y: auto;" id="chatHistory">
+                    <div class="message assistant-message">
+                        <div class="message-bubble">
+                            <strong>MediAI:</strong> Hello! I'm your AI health assistant. How can I help you today?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="chatInput" class="form-control input-field" 
+                        placeholder="Describe your symptoms or ask a health question...">
+                    <button class="btn btn-gradient" id="sendChatBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button class="btn btn-gradient" id="chatSpeechBtn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -494,93 +597,31 @@
     </div>
     {% endif %}
 
-<!-- Predictable Diseases Section -->
-    <div class="container mt-5">
-        <div class="row justify-content-center mb-4">
-            <div class="col-auto">
-                <button class="btn btn-gradient w-auto px-4" 
-                        type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#diseaseList" 
-                        aria-expanded="false" 
-                        aria-controls="diseaseList">
-                    View All Diseases
-                </button>
-            </div>
-            <div class="col-auto">
-                <button class="btn btn-gradient w-auto px-4" 
-                        type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#symptomsList" 
-                        aria-expanded="false" 
-                        aria-controls="symptomsList">
-                    View All Symptoms
-                </button>
-            </div>
-        </div>
-
-    <div class="collapse" id="diseaseList">
-        <div class="glass-card p-4">
-            <h3 class="text-center mb-4 gradient-text">Diseases Our System Can Recognize</h3>
-            <div class="row">
-                {% for disease in all_diseases %}
-                <div class="col-md-4 col-sm-6 mb-3">
-                    <div class="card glass-card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                {{ disease }}
-                                {% if disease in predictable_diseases %}
-                                <span class="badge bg-success ms-2">Predictable</span>
-                                {% endif %}
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+        <strong>Disclaimer:</strong> This AI system provides preliminary health information only and is developed solely for project purposes. Always consult a medical professional for diagnosis and treatment.
     </div>
 
-    <div class="collapse" id="symptomsList">
-        <div class="glass-card p-4">
-            <h3 class="text-center mb-4 gradient-text">Symptoms Our System Can Recognize</h3>
-            <div class="row">
-                {% for symptom in recognizable_symptoms %}
-                <div class="col-md-4 col-sm-6 mb-3">
-                    <div class="card glass-card symptom-card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                {{ symptom.replace('_', ' ').title() }}
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="disclaimer">
-  <strong>Disclaimer:</strong> This AI system provides preliminary health information only and is developed solely for project purposes. Always consult a medical professional for diagnosis and treatment.
-</div>
-
-    </div>
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     
-    <!-- JavaScript -->
+    <!-- Application JavaScript -->
     <script>
         // Speech Recognition
         const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
         const transcriptionDiv = document.getElementById('transcription');
 
-        startSpeechRecognitionButton.addEventListener('click', startSpeechRecognition);
+        if (startSpeechRecognitionButton) {
+            startSpeechRecognitionButton.addEventListener('click', startSpeechRecognition);
+        }
 
         function startSpeechRecognition() {
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'en-US';
 
             recognition.onresult = function(event) {
-                const result = event.results[0][0].transcript;
+                const result = event.results[0].transcript;
                 transcriptionDiv.textContent = result;
                 document.getElementById('symptoms').value = result;
             };
@@ -604,11 +645,13 @@
         const btnText = document.getElementById('btnText');
         const btnSpinner = document.getElementById('btnSpinner');
 
-        form.addEventListener('submit', () => {
-            predictBtn.disabled = true;
-            btnText.textContent = 'Predicting…';
-            btnSpinner.classList.remove('d-none');
-        });
+        if (form) {
+            form.addEventListener('submit', () => {
+                if (predictBtn) predictBtn.disabled = true;
+                if (btnText) btnText.textContent = 'Predicting…';
+                if (btnSpinner) btnSpinner.classList.remove('d-none');
+            });
+        }
 
         // Typing Animation
         document.addEventListener("DOMContentLoaded", () => {
@@ -654,29 +697,35 @@
         
         // Auto-complete functionality
         const normalizedSymptoms = JSON.parse('{{ normalized_symptoms|tojson|safe }}');
-        document.getElementById('symptoms').addEventListener('input', function(e) {
-            const input = e.target.value.toLowerCase();
-            const lastCommaIndex = input.lastIndexOf(',');
-            const currentTerm = lastCommaIndex >= 0 
-                ? input.substring(lastCommaIndex + 1).trim() 
-                : input.trim();
-            
-            if (currentTerm.length > 2) {
-                // Get matching symptoms
-                const matches = Object.keys(normalizedSymptoms)
-                    .filter(symptom => symptom.includes(currentTerm))
-                    .map(symptom => normalizedSymptoms[symptom])
-                    .slice(0, 5);
+        const symptomsInput = document.getElementById('symptoms');
+        
+        if (symptomsInput) {
+            symptomsInput.addEventListener('input', function(e) {
+                const input = e.target.value.toLowerCase();
+                const lastCommaIndex = input.lastIndexOf(',');
+                const currentTerm = lastCommaIndex >= 0 
+                    ? input.substring(lastCommaIndex + 1).trim() 
+                    : input.trim();
                 
-                showSuggestions(matches);
-            } else {
-                hideSuggestions();
-            }
-        });
+                if (currentTerm.length > 2) {
+                    // Get matching symptoms
+                    const matches = Object.keys(normalizedSymptoms)
+                        .filter(symptom => symptom.includes(currentTerm))
+                        .map(symptom => normalizedSymptoms[symptom])
+                        .slice(0, 5);
+                    
+                    showSuggestions(matches);
+                } else {
+                    hideSuggestions();
+                }
+            });
+        }
 
         // Show suggestions
         function showSuggestions(matches) {
             let container = document.getElementById('suggestions-container');
+            if (!container) return;
+            
             container.innerHTML = '';
             
             if (matches.length > 0) {
@@ -764,21 +813,203 @@
             },
             retina_detect: true
         });
-    </script>
-    
-    <!-- Toast Trigger -->
-    {% if predicted_disease %}
-    <script>
+
+        // Mode Toggling
+        const diagnosisModeBtn = document.getElementById('diagnosisModeBtn');
+        const chatModeBtn = document.getElementById('chatModeBtn');
+        const diagnosisForm = document.getElementById('diagnosisForm');
+        const chatInterface = document.getElementById('chatInterface');
+        
+        if (chatModeBtn && diagnosisModeBtn) {
+            chatModeBtn.addEventListener('click', () => {
+                diagnosisForm.style.display = 'none';
+                chatInterface.style.display = 'block';
+                diagnosisModeBtn.classList.remove('btn-gradient');
+                diagnosisModeBtn.classList.add('btn-outline-light');
+                chatModeBtn.classList.remove('btn-outline-light');
+                chatModeBtn.classList.add('btn-gradient');
+            });
+            
+            diagnosisModeBtn.addEventListener('click', () => {
+                chatInterface.style.display = 'none';
+                diagnosisForm.style.display = 'block';
+                chatModeBtn.classList.remove('btn-gradient');
+                chatModeBtn.classList.add('btn-outline-light');
+                diagnosisModeBtn.classList.remove('btn-outline-light');
+                diagnosisModeBtn.classList.add('btn-gradient');
+            });
+        }
+
+        // Chat Functionality
+        const chatHistory = document.getElementById('chatHistory');
+        const chatInput = document.getElementById('chatInput');
+        const sendChatBtn = document.getElementById('sendChatBtn');
+        const chatSpeechBtn = document.getElementById('chatSpeechBtn');
+        
+        let chatMessages = [
+            { role: 'assistant', content: "Hello! I'm your AI health assistant. How can I help you today?" }
+        ];
+        
+        function renderChat() {
+            if (!chatHistory) return;
+            chatHistory.innerHTML = '';
+            chatMessages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.role}-message`;
+                
+                const bubble = document.createElement('div');
+                bubble.className = 'message-bubble';
+                
+                if (msg.role === 'assistant') {
+                    bubble.innerHTML = `<strong>MediAI:</strong> ${msg.content}`;
+                } else {
+                    bubble.innerHTML = `<strong>You:</strong> ${msg.content}`;
+                }
+                
+                messageDiv.appendChild(bubble);
+                chatHistory.appendChild(messageDiv);
+            });
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            if (!chatHistory) return null;
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant-message';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble typing-indicator';
+            bubble.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            
+            typingDiv.appendChild(bubble);
+            chatHistory.appendChild(typingDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            return typingDiv;
+        }
+        
+        async function sendChatMessage() {
+            const message = chatInput ? chatInput.value.trim() : '';
+            if (!message) return;
+            
+            // Add user message
+            chatMessages.push({ role: 'user', content: message });
+            renderChat();
+            if (chatInput) chatInput.value = '';
+            
+            // Show typing indicator
+            const typingIndicator = showTypingIndicator();
+            
+            try {
+                // Send to backend
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        history: chatMessages
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                if (typingIndicator) typingIndicator.remove();
+                
+                if (data.error) {
+                    chatMessages.push({
+                        role: 'assistant',
+                        content: "Sorry, I encountered an error. Please try again."
+                    });
+                } else {
+                    chatMessages = data.history;
+                    
+                    // Check if we have a diagnosis
+                    const diagnosisMatch = data.response.match(/Predicted disease: (.+)/);
+                    if (diagnosisMatch) {
+                        const diseaseName = diagnosisMatch[1];
+                        
+                        // Get disease details
+                        const detailsResponse = await fetch('/api/disease-details', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ disease: diseaseName })
+                        });
+                        
+                        const details = await detailsResponse.json();
+                        
+                        // Format disease information
+                        const diseaseInfo = `
+                            <div class="disease-card glass-card p-3 mt-2">
+                                <h5>Diagnosis: ${details.name}</h5>
+                                <p><strong>Description:</strong> ${details.description}</p>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-gradient" 
+                                        onclick="showDiseaseDetails('${details.name}')">
+                                        View Full Details
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        chatMessages[chatMessages.length - 1].content += diseaseInfo;
+                    }
+                }
+                
+                renderChat();
+            } catch (error) {
+                if (typingIndicator) typingIndicator.remove();
+                chatMessages.push({
+                    role: 'assistant',
+                    content: "Network error. Please check your connection."
+                });
+                renderChat();
+            }
+        }
+        
+        function showDiseaseDetails(diseaseName) {
+            alert(`Showing details for: ${diseaseName}`);
+        }
+        
+        // Speech recognition for chat
+        if (chatSpeechBtn) {
+            chatSpeechBtn.addEventListener('click', function() {
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.start();
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    if (chatInput) chatInput.value = transcript;
+                };
+            });
+        }
+        
+        // Event listeners
+        if (sendChatBtn) sendChatBtn.addEventListener('click', sendChatMessage);
+        if (chatInput) {
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendChatMessage();
+            });
+        }
+        
+        // Initial render
+        renderChat();
+
+        // Toast Trigger
+        {% if predicted_disease %}
         document.addEventListener('DOMContentLoaded', function() {
             var toastEl = document.getElementById('resultToast');
-            var toast = new bootstrap.Toast(toastEl);
-            toast.show();
-        });
+            if (toastEl) {
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+            });
+        {% endif %}
     </script>
-    {% endif %}
-
-    <!-- External Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>

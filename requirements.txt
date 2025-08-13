@@ -7,3 +7,6 @@ Pillow==10.3.0
 flask-limiter==3.3.0
 Flask-WTF==1.2.1
 Werkzeug==2.2.3
+langchain
+langchain-core
+langchain-google-genai
