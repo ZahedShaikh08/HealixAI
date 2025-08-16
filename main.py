@@ -13,6 +13,8 @@ from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from dotenv import load_dotenv
+from flask_cors import CORS
+
 load_dotenv()
 
 # Initialize logging
@@ -24,6 +26,7 @@ app = Flask(__name__, static_folder='static')
 app.secret_key = os.urandom(24).hex()
 app.config['WTF_CSRF_ENABLED'] = True
 csrf = CSRFProtect(app)
+CORS(app, supports_credentials=True)  # Add CORS support
 
 # Get the absolute path to the current directory
 BASE_DIR = Path(__file__).resolve().parent
@@ -318,6 +321,7 @@ def chat():
         chat_history.append({"role": "user", "content": user_input})
         chat_history.append({"role": "assistant", "content": result['output']})
         session['chat_history'] = chat_history
+        session.modified = True  # Ensure session is saved
         
         # Add safety footer
         response_text = result['output'] + "\n\n*Consult a healthcare professional for medical advice*"
@@ -341,7 +345,7 @@ def get_disease_details(disease_name: str):
         "workouts": wrkout
     }
 
-@app.route('/api/disease-details', methods=['POST'])
+@app.route('/api/disease-details', methods=['POST'])  # Keep hyphenated endpoint
 @csrf.exempt
 def disease_details():
     data = request.get_json(force=True) or {}

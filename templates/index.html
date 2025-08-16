@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -617,17 +617,36 @@
         }
 
         function startSpeechRecognition() {
+            if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
+                alert("Speech recognition is not supported in your browser. Please use Chrome or Edge.");
+                return;
+            }
+
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            // Visual feedback
+            const button = document.getElementById('startSpeechRecognition');
+            const originalText = button.innerHTML;
+            button.innerHTML = '🎤 Listening...';
+            button.disabled = true;
 
             recognition.onresult = function(event) {
-                const result = event.results[0].transcript;
-                transcriptionDiv.textContent = result;
+                const result = event.results[0][0].transcript;
+                transcriptionDiv.textContent = "Transcribed: " + result;
                 document.getElementById('symptoms').value = result;
             };
 
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+                transcriptionDiv.textContent = "Error: " + event.error;
+            };
+
             recognition.onend = function() {
-                console.log('Speech recognition ended.');
+                button.innerHTML = originalText;
+                button.disabled = false;
             };
 
             recognition.start();
@@ -908,12 +927,20 @@
                 // Send to backend
                 const response = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    },
                     body: JSON.stringify({
                         message: message,
                         history: chatMessages
-                    })
+                    }),
+                    credentials: 'include'  // Include cookies for session
                 });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 
                 const data = await response.json();
                 
@@ -926,7 +953,15 @@
                         content: "Sorry, I encountered an error. Please try again."
                     });
                 } else {
-                    chatMessages = data.history;
+                    // Handle both formats: direct response or history
+                    if (data.response) {
+                        chatMessages.push({
+                            role: 'assistant',
+                            content: data.response
+                        });
+                    } else if (data.history) {
+                        chatMessages = data.history;
+                    }
                     
                     // Check if we have a diagnosis
                     const diagnosisMatch = data.response.match(/Predicted disease: (.+)/);
@@ -936,9 +971,17 @@
                         // Get disease details
                         const detailsResponse = await fetch('/api/disease-details', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ disease: diseaseName })
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ disease: diseaseName }),
+                            credentials: 'include'  // Include cookies for session
                         });
+                        
+                        if (!detailsResponse.ok) {
+                            throw new Error(`Disease details error: ${detailsResponse.status}`);
+                        }
                         
                         const details = await detailsResponse.json();
                         
@@ -962,10 +1005,11 @@
                 
                 renderChat();
             } catch (error) {
+                console.error('Chat error:', error);
                 if (typingIndicator) typingIndicator.remove();
                 chatMessages.push({
                     role: 'assistant',
-                    content: "Network error. Please check your connection."
+                    content: "I'm having trouble connecting. Please try again later."
                 });
                 renderChat();
             }
@@ -978,14 +1022,36 @@
         // Speech recognition for chat
         if (chatSpeechBtn) {
             chatSpeechBtn.addEventListener('click', function() {
+                if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
+                    alert("Speech recognition is not supported in your browser. Please use Chrome or Edge.");
+                    return;
+                }
+
                 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
                 recognition.lang = 'en-US';
-                recognition.start();
-                
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                // Visual feedback
+                const originalHTML = chatSpeechBtn.innerHTML;
+                chatSpeechBtn.innerHTML = '<i class="fas fa-microphone-alt-slash"></i>';
+                chatSpeechBtn.disabled = true;
+
                 recognition.onresult = function(event) {
                     const transcript = event.results[0][0].transcript;
                     if (chatInput) chatInput.value = transcript;
                 };
+
+                recognition.onerror = function(event) {
+                    console.error('Chat speech recognition error', event.error);
+                };
+
+                recognition.onend = function() {
+                    chatSpeechBtn.innerHTML = originalHTML;
+                    chatSpeechBtn.disabled = false;
+                };
+
+                recognition.start();
             });
         }
         
