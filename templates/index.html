@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -7,7 +7,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='mediai_logo.png') }}">
     <meta name="theme-color" content="#0d0d0d">
     
-    <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -35,9 +34,11 @@
             background: rgba(0, 0, 0, 0.8) !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
+        
+        /* CORRECTED: Changed justify-content to space-between for proper mobile layout */
         .navbar .container {
             display: flex !important;
-            justify-content: left !important;
+            justify-content: space-between !important;
         }
 
         .logo {
@@ -197,6 +198,8 @@
         /* === TOAST === */
         .gradient-toast {
             background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
+            color: white;
+            border: none;
         }
 
         .gradient-toast .toast-body {
@@ -374,6 +377,7 @@
             padding: 0.8rem 1.2rem;
             border-radius: 1.2rem;
             position: relative;
+            word-wrap: break-word;
         }
         
         .user-message .message-bubble {
@@ -414,13 +418,15 @@
 <body>
     <div id="particles-js"></div>
     
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <div class="logo">
-                <img class="myimg" src="{{ url_for('static', filename='mediai_logo.png') }}" alt="Logo">
+            <div class="d-flex align-items-center">
+                <div class="logo">
+                    <img class="myimg" src="{{ url_for('static', filename='mediai_logo.png') }}" alt="Logo">
+                </div>
+                <a class="navbar-brand ms-2" href="/index">MediAI</a>
             </div>
-            <a class="navbar-brand ms-2" href="/index">MediAI</a>
+            
             <button class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
@@ -430,11 +436,11 @@
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent"></div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                 </div>
         </div>
     </nav>
 
-    <!-- Message Display -->
     {% if message %}
     <div class="container mt-3">
         <div class="alert alert-danger glass-card mb-4">
@@ -443,17 +449,14 @@
     </div>
     {% endif %}
     
-    <!-- Animated Heading -->
     <div class="container mt-5">
         <h1 id="animated-heading" class="text-center mb-4">
             <span id="typed-text"></span><span id="cursor">|</span>
         </h1>
     </div>
 
-    <!-- Main Interface -->
     <div class="container mt-5">
         <div class="glass-card p-4 mb-5">
-            <!-- Mode Toggle -->
             <div class="d-flex justify-content-center mb-4">
                 <div class="btn-group" role="group">
                     <button type="button" id="diagnosisModeBtn" class="btn btn-gradient">
@@ -465,10 +468,12 @@
                 </div>
             </div>
 
-            <!-- Diagnosis Form (Default) -->
             <div id="diagnosisForm">
                 <form action="/predict" method="post">
+                    {% if csrf_token %}
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {% endif %}
+                    
                     <label for="symptoms" class="form-label">Tell Us Your Symptoms:</label>
                     <input type="text" id="symptoms" name="symptoms" class="form-control input-field animated-placeholder mb-3" placeholder="e.g. itching, headache, nausea…">
                     <div id="suggestions-container" class="suggestions-box"></div>
@@ -486,7 +491,6 @@
                 </form>
             </div>
 
-            <!-- Chat Interface (Hidden) -->
             <div id="chatInterface" style="display: none;">
                 <div class="chat-container glass-card mb-3" style="height: 400px; overflow-y: auto;" id="chatHistory">
                     <div class="message assistant-message">
@@ -510,14 +514,12 @@
         </div>
     </div>
 
-    <!-- Results Section -->
     {% if predicted_disease %}
-    <div class="container my-5">
+    <div class="container my-5" style="margin-bottom: 100px;">
         <h1 id="predictionHeading" class="text-center mb-4 gradient-text">Predicted Health Report</h1>
 
         <div class="accordion gradient-accordion mb-5" id="healthReportAccordion">
             <div class="row g-4">
-                <!-- Predicted Disease -->
                 <div class="col-md-6">
                     <div class="card glass-card h-100">
                         <div class="card-header border-0 bg-transparent">Predicted Disease</div>
@@ -527,7 +529,6 @@
                     </div>
                 </div>
 
-                <!-- Description -->
                 <div class="col-md-6">
                     <div class="card glass-card h-100">
                         <div class="card-header border-0 bg-transparent">Description</div>
@@ -537,7 +538,6 @@
                     </div>
                 </div>
 
-                <!-- Precautions -->
                 <div class="col-md-6">
                     <div class="card glass-card h-100">
                         <div class="card-header border-0 bg-transparent">Precautions</div>
@@ -551,7 +551,6 @@
                     </div>
                 </div>
 
-                <!-- Medications -->
                 <div class="col-md-6">
                     <div class="card glass-card h-100">
                         <div class="card-header border-0 bg-transparent">Medications</div>
@@ -565,7 +564,6 @@
                     </div>
                 </div>
 
-                <!-- Workouts -->
                 <div class="col-md-6">
                     <div class="card glass-card h-100">
                         <div class="card-header border-0 bg-transparent">Workouts</div>
@@ -579,7 +577,6 @@
                     </div>
                 </div>
 
-                <!-- Diets -->
                 <div class="col-md-6">
                     <div class="card glass-card h-100">
                         <div class="card-header border-0 bg-transparent">Recommended Diets</div>
@@ -596,17 +593,26 @@
         </div>
     </div>
     {% endif %}
+    
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050; margin-bottom: 60px;">
+      <div id="resultToast" class="toast gradient-toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-transparent text-white border-bottom border-white-50">
+          <strong class="me-auto">MediAI Notification</strong>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Diagnosis completed successfully! Scroll down to see your results.
+        </div>
+      </div>
+    </div>
 
-    <!-- Disclaimer -->
     <div class="disclaimer">
         <strong>Disclaimer:</strong> This AI system provides preliminary health information only and is developed solely for project purposes. Always consult a medical professional for diagnosis and treatment.
     </div>
 
-    <!-- External Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     
-    <!-- Application JavaScript -->
     <script>
         // Speech Recognition
         const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
@@ -714,8 +720,9 @@
             }
         });
         
-        // Auto-complete functionality
-        const normalizedSymptoms = JSON.parse('{{ normalized_symptoms|tojson|safe }}');
+        // CORRECTED: Auto-complete functionality with Safe Parsing
+        // We use |default({}) to prevent crashing if normalized_symptoms is None or missing
+        const normalizedSymptoms = JSON.parse('{{ (normalized_symptoms|default({}))|tojson|safe }}');
         const symptomsInput = document.getElementById('symptoms');
         
         if (symptomsInput) {
@@ -869,6 +876,7 @@
             { role: 'assistant', content: "Hello! I'm your AI health assistant. How can I help you today?" }
         ];
         
+        // CORRECTED: Security patch to prevent XSS (renders user input as text, not HTML)
         function renderChat() {
             if (!chatHistory) return;
             chatHistory.innerHTML = '';
@@ -880,9 +888,14 @@
                 bubble.className = 'message-bubble';
                 
                 if (msg.role === 'assistant') {
+                    // Assistant messages are trusted and may contain buttons/HTML
                     bubble.innerHTML = `<strong>MediAI:</strong> ${msg.content}`;
                 } else {
-                    bubble.innerHTML = `<strong>You:</strong> ${msg.content}`;
+                    // User messages are untrusted - render as text node
+                    const strong = document.createElement('strong');
+                    strong.textContent = 'You: ';
+                    bubble.appendChild(strong);
+                    bubble.appendChild(document.createTextNode(msg.content));
                 }
                 
                 messageDiv.appendChild(bubble);
@@ -924,18 +937,21 @@
             const typingIndicator = showTypingIndicator();
             
             try {
-                // Send to backend
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
+                        // Keep the CSRF token just in case, even though your route is exempt
+                        {% if csrf_token is defined %}
                         'X-CSRFToken': '{{ csrf_token() }}'
+                        {% endif %}
                     },
                     body: JSON.stringify({
-                        message: message,
-                        history: chatMessages
+                        message: message
+                        // REMOVED: history: chatMessages 
+                        // REASON: Your main.py uses session['chat_history'], so the server remembers automatically.
                     }),
-                    credentials: 'include'  // Include cookies for session
+                    credentials: 'include' // <--- CRITICAL: This sends the session cookie
                 });
                 
                 if (!response.ok) {
@@ -964,7 +980,7 @@
                     }
                     
                     // Check if we have a diagnosis
-                    const diagnosisMatch = data.response.match(/Predicted disease: (.+)/);
+                    const diagnosisMatch = data.response && data.response.match(/Predicted disease: (.+)/);
                     if (diagnosisMatch) {
                         const diseaseName = diagnosisMatch[1];
                         
@@ -973,10 +989,12 @@
                             method: 'POST',
                             headers: { 
                                 'Content-Type': 'application/json',
+                                {% if csrf_token is defined %}
                                 'X-CSRFToken': '{{ csrf_token() }}'
+                                {% endif %}
                             },
                             body: JSON.stringify({ disease: diseaseName }),
-                            credentials: 'include'  // Include cookies for session
+                            credentials: 'include'
                         });
                         
                         if (!detailsResponse.ok) {
@@ -1074,7 +1092,7 @@
                 var toast = new bootstrap.Toast(toastEl);
                 toast.show();
             }
-            });
+        });
         {% endif %}
     </script>
 </body>

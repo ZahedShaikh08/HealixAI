@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 # Flask app
 app = Flask(__name__, static_folder='static')
-app.secret_key = os.urandom(24).hex()
+# Load from .env, or fall back to random for dev
+app.secret_key = os.getenv("FLASK_SECRET_KEY", os.urandom(24).hex())
 app.config['WTF_CSRF_ENABLED'] = True
 csrf = CSRFProtect(app)
 CORS(app, supports_credentials=True)  # Add CORS support
@@ -199,7 +200,7 @@ def symptom_checker(symptoms: str) -> str:
 
 # Initialize Gemini chat model
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",  # Updated to faster model
+    model="models/gemini-flash-lite-latest",
     temperature=0.3,
     google_api_key=os.getenv("GOOGLE_API_KEY")
 )
