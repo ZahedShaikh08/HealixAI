@@ -1,4 +1,6 @@
-venv/
+﻿venv/
+.env
+__pycache__/
+*.pkl
 .idea/
 render.yaml
-.env

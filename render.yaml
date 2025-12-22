@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: health-diagnosis-system
-    env: python
-    buildCommand: "./build.sh"
-    startCommand: "./start.sh"
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.7
