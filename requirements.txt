@@ -9,7 +9,7 @@ numpy
 pandas
 scikit-learn==1.2.2
 
-# Visualization (used in project)
+# Visualization
 matplotlib
 seaborn
 
@@ -19,3 +19,5 @@ langchain-core
 langchain-community
 langchain-google-genai
 google-genai
+
+gunicorn==23.0.0
