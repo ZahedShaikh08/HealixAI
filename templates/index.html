@@ -1,1099 +1,591 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI-Powered Health Diagnosis System</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='mediai_logo.png') }}">
-    <meta name="theme-color" content="#0d0d0d">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealixAI | Intelligent Diagnosis System</title>
+
+    <link rel="icon" type="image/jpeg" sizes="32x32" href="{{ url_for('static', filename='img/Healix-ai_circle.png') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* === GLOBAL STYLES === */
-        body {
-            background: #0d0d0d;
-            color: #e0e0e0;
-            font-family: 'Orbitron', sans-serif;
-            overflow-x: hidden;
-        }
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-        /* === PARTICLES BACKGROUND === */
-        #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        /* === NAVBAR STYLES === */
-        .navbar {
-            background: rgba(0, 0, 0, 0.8) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        }
-        
-        /* CORRECTED: Changed justify-content to space-between for proper mobile layout */
-        .navbar .container {
-            display: flex !important;
-            justify-content: space-between !important;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            color: black;
-            margin-top: 0;
-            margin-left: 2px;
-        }
-
-        .myimg {
-            width: 48px;
-            height: 48px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            box-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
-            transition: transform .3s;
-        }
-
-        .myimg:hover {
-            transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 0 16px #00e5ff;
-        }
-
-        /* === TYPOGRAPHY === */
-        .gradient-text {
-            color: transparent;
-            background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .typewriter-text {
-            font-size: 1.8rem;
-            text-align: center;
-            color: var(--text);
-            margin-top: 1rem;
-            position: relative;
-        }
-
-        #typed-text {
-            white-space: pre-wrap;
-        }
-
-        .gradient-char {
-            background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            animation-name: pulse;
-            animation-duration: 1.5s;
-            animation-timing-function: ease-in-out;
-            animation-iteration-count: 2;
-        }
-
-        .gradient-char.word-end {
-            margin-right: 0.1em;
-        }
-
-        #cursor {
-            display: inline-block;
-            margin-left: 4px;
-            font-weight: bold;
-            color: #7e57c2;
-            animation: blink 1s steps(2, start) infinite;
-        }
-
-        /* === FORM & CARDS === */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            color: #fff;
-        }
-
-        .input-field {
-            background: #121212;
-            border: none;
-            border-radius: 0.75rem;
-            padding: 0.75rem 1rem;
-            color: #fff;
-            box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.6),
-                        inset -4px -4px 8px rgba(255, 255, 255, 0.05);
-            transition: box-shadow .3s;
-        }
-
-        .input-field:focus {
-            outline: none;
-            box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.8),
-                        inset -2px -2px 4px rgba(255, 255, 255, 0.1),
-                        0 0 8px #00e5ff;
-        }
-
-        .animated-placeholder::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-            opacity: 1;
-            animation: typing 4s steps(30, end) infinite alternate;
-        }
-
-        /* === BUTTONS === */
-        .btn-gradient {
-            background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
-            border: none;
-            border-radius: 1rem;
-            color: #fff;
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            font-size: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .btn-gradient:hover {
-            background: linear-gradient(135deg, #64b5f6 0%, #9575cd 100%);
-            transform: translateY(-2px);
-        }
-
-        .btn-gradient:active {
-            transform: translateY(0);
-        }
-
-        /* === RESULTS SECTION === */
-        #predictionHeading {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        #predictionHeading.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .gradient-accordion {
-            background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            color: #fff;
-        }
-
-        .gradient-header .accordion-button {
-            background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
-            color: #fff;
-            border: none;
-        }
-
-        .gradient-header .accordion-button:not(.collapsed) {
-            background: linear-gradient(135deg, #64b5f6 0%, #9575cd 100%);
-        }
-
-        /* === TOAST === */
-        .gradient-toast {
-            background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
-            color: white;
-            border: none;
-        }
-
-        .gradient-toast .toast-body {
-            background: transparent;
-        }
-        
-        .suggestions-box {
-            position: absolute;
-            background: rgba(30, 30, 40, 0.95);
-            border: 1px solid rgba(100, 100, 255, 0.3);
-            border-radius: 0.5rem;
-            width: calc(100% - 2rem);
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            margin-top: -15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            display: none;
-        }
-
-        .suggestion-item {
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .suggestion-item:hover {
-            background: rgba(80, 100, 255, 0.2);
-            transform: translateX(5px);
-        }
-
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
-
-        /* Disease List Styling */
-        #diseaseList .card {
-            transition: all 0.3s ease;
-            border: 1px solid rgba(66, 165, 245, 0.3);
-        }
-
-        #diseaseList .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(126, 87, 194, 0.3);
-            border: 1px solid #7e57c2;
-        }
-
-        #diseaseList .card-title {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        
-        .badge {
-            font-size: 0.7rem;
-            font-weight: 500;
-            padding: 0.35em 0.65em;
-            border-radius: 0.75rem;
-            vertical-align: middle;
-        }
-
-        .bg-success {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-        }
-        
-        .bg-info {
-            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-        }
-        
-        /* Symptom card styling */
-        .symptom-card .card-title {
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        /* === ANIMATIONS === */
-        @media (max-width: 768px) {
-            .symptom-card .card-title {
-                font-size: 0.85rem;
-            }
-            .badge {
-                font-size: 0.6rem;
-                padding: 0.25em 0.5em;
-            }
-        }
-
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0.7;
-            }
-        }
-
-        @keyframes blink {
-            0%, 50%  { opacity: 1; }
-            51%,100% { opacity: 0; }
-        }
-
-        .skeleton {
-            background: #e0e0e0;
-            border-radius: 4px;
-            margin-bottom: 0.75rem;
-            animation-name: pulse;
-            animation-duration: 1.5s;
-            animation-timing-function: ease-in-out;
-            animation-iteration-count: 2;
-        }
-
-        html.fade body {
-            opacity: 0;
-            transition: opacity 0.8s ease-in-out;
-        }
-
-        body {
-            opacity: 1;
-        }
-        
-        .disclaimer {
-            background: rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            z-index: 100;
-        }
-
-        .disclaimer strong {
-            color: #ff6b6b;
-            font-weight: 600;
-        }
-        
-        .alert-danger {
-            background: rgba(255, 107, 107, 0.2);
-            border: 1px solid rgba(255, 107, 107, 0.5);
-            border-radius: 0.75rem;
-        }
-
-        /* Chat Interface Styles */
-        .chat-container {
-            background: rgba(20, 20, 30, 0.7);
-            border-radius: 1rem;
-            padding: 1.5rem;
-        }
-        
-        .message {
-            margin-bottom: 1.2rem;
-            display: flex;
-        }
-        
-        .user-message {
-            justify-content: flex-end;
-        }
-        
-        .assistant-message {
-            justify-content: flex-start;
-        }
-        
-        .message-bubble {
-            max-width: 80%;
-            padding: 0.8rem 1.2rem;
-            border-radius: 1.2rem;
-            position: relative;
-            word-wrap: break-word;
-        }
-        
-        .user-message .message-bubble {
-            background: linear-gradient(135deg, #42a5f5 0%, #7e57c2 100%);
-            border-bottom-right-radius: 0.3rem;
-        }
-        
-        .assistant-message .message-bubble {
-            background: rgba(255, 255, 255, 0.15);
-            border-bottom-left-radius: 0.3rem;
-        }
-        
-        /* Typing indicator */
-        .typing-indicator {
-            display: flex;
-            padding: 1rem;
-        }
-        
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            margin: 0 3px;
-            background: #42a5f5;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: pulse 1.5s infinite;
-        }
-        
-        .typing-dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .typing-dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-    <div id="particles-js"></div>
-    
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <div class="d-flex align-items-center">
-                <div class="logo">
-                    <img class="myimg" src="{{ url_for('static', filename='mediai_logo.png') }}" alt="Logo">
-                </div>
-                <a class="navbar-brand ms-2" href="/index">MediAI</a>
-            </div>
-            
-            <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                 </div>
+
+    <nav class="floating-nav" role="navigation">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='img/Healix-ai.jpeg') }}"
+                style="width: 35px; height: 35px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);">
+            HealixAI
+        </a>
+
+        <div class="d-none d-md-flex gap-4">
+            <a href="/" class="text-highlight">Diagnosis</a>
+            <a href="/technology" class="text-highlight">Technology</a>
+            <a href="/symptoms" class="text-highlight">Symptoms</a>
         </div>
+
+        <button class="btn border-0 text-white d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+            <i class="fa-solid fa-bars fs-4"></i>
+        </button>
     </nav>
 
-    {% if message %}
-    <div class="container mt-3">
-        <div class="alert alert-danger glass-card mb-4">
-            {{ message|safe }}
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu"
+        style="background: var(--bg-deep); border-left: 1px solid rgba(94, 234, 212, 0.2);">
+        <div class="offcanvas-header">
+            <h5 class="text-highlight fw-bold">Menu</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column gap-4 p-4">
+            <a href="/" class="fs-4 text-white"><i class="fa-solid fa-stethoscope me-3 text-primary"></i>Diagnosis</a>
+            <a href="/technology" class="fs-4 text-white"><i class="fa-solid fa-microchip me-3 text-secondary"></i>Technology</a>
+            <a href="/symptoms" class="fs-4 text-white"><i class="fa-solid fa-list-ul me-3 text-warning"></i>Symptoms</a>
         </div>
     </div>
-    {% endif %}
-    
-    <div class="container mt-5">
-        <h1 id="animated-heading" class="text-center mb-4">
-            <span id="typed-text"></span><span id="cursor">|</span>
-        </h1>
-    </div>
 
-    <div class="container mt-5">
-        <div class="glass-card p-4 mb-5">
-            <div class="d-flex justify-content-center mb-4">
-                <div class="btn-group" role="group">
-                    <button type="button" id="diagnosisModeBtn" class="btn btn-gradient">
-                        <i class="fas fa-stethoscope me-2"></i>Diagnosis Mode
-                    </button>
-                    <button type="button" id="chatModeBtn" class="btn btn-outline-light">
-                        <i class="fas fa-comments me-2"></i>Chat Mode
-                    </button>
-                </div>
+    <header class="hero container">
+        <div class="reveal">
+            <div class="badge-inline">
+                <small class="text-highlight fw-bold">✨ AI-Assisted Healthcare Assessment v2.0</small>
             </div>
+            <h1 class="display-3 fw-bold mb-4">
+                Intelligent Diagnosis.<br />
+                <span class="text-highlight">Human Care.</span>
+            </h1>
+            <p class="lead text-white-soft mx-auto" style="max-width:600px;">
+                <span id="hero-typing" class="typing-cursor text-white-soft"></span>
+            </p>
+            <div class="mt-5 d-flex justify-content-center gap-3">
+                <a href="#diagnosis" class="btn-modern btn-primary-glow" aria-label="Start checkup">
+                    Start Checkup <i class="fa-solid fa-arrow-down"></i>
+                </a>
+            </div>
+        </div>
+    </header>
 
-            <div id="diagnosisForm">
-                <form action="/predict" method="post">
-                    {% if csrf_token %}
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    {% endif %}
-                    
-                    <label for="symptoms" class="form-label">Tell Us Your Symptoms:</label>
-                    <input type="text" id="symptoms" name="symptoms" class="form-control input-field animated-placeholder mb-3" placeholder="e.g. itching, headache, nausea…">
-                    <div id="suggestions-container" class="suggestions-box"></div>
-                    <div id="transcription" class="mt-2 text-info"></div>
+    <section id="diagnosis" class="section-padding">
+        <div class="container diagnosis-container">
 
-                    <div class="d-flex flex-wrap gap-2 mt-3">
-                        <button type="button" id="startSpeechRecognition" class="btn btn-gradient flex-grow-1">
-                            🩺 Talk to Diagnose
+            {% if message %}
+            <div class="alert alert-danger glass-panel border-0 text-white mb-4 d-flex align-items-start gap-3" role="alert">
+                <i class="fa-solid fa-triangle-exclamation text-danger mt-1"></i>
+                <div class="w-100"> {{ message|safe }} </div>
+            </div>
+            {% endif %}
+
+            <div class="glass-panel p-4 p-md-5 reveal" aria-live="polite">
+
+                {% if predicted_disease %}
+                <div class="fade-in-down mb-4 mx-auto" style="max-width: 500px;">
+                    <div class="glass-panel p-3 border-0 d-flex align-items-center gap-3 shadow-sm" style="background: rgba(94, 234, 212, 0.1);">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="background-color: #0d9488; width: 40px; height: 40px;">
+                            <i class="fa-solid fa-brain text-white"></i>
+                        </div>
+                        <div class="text-start flex-grow-1">
+                            <h6 class="text-highlight mb-0 small fw-bold">Have questions about {{ predicted_disease }}?</h6>
+                            <p class="text-white-soft small mb-0" style="font-size: 0.85rem;">Switch to <strong>AI Assistant</strong> below to ask for advice.</p>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white small" onclick="this.parentElement.parentElement.remove()"></button>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="text-center">
+                    <div class="mode-switch" role="tablist" aria-label="Mode switch">
+                        <button type="button" class="mode-btn active" id="btn-diagnosis" aria-controls="view-diagnosis" onclick="toggleMode('diagnosis')" role="tab" aria-selected="true">
+                            <i class="fa-solid fa-stethoscope me-2"></i>Diagnosis
                         </button>
-                        <button type="submit" class="btn btn-gradient flex-grow-1" id="predictBtn">
-                            <span id="btnText">Predict</span>
-                            <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                        <button type="button" class="mode-btn" id="btn-chat" aria-controls="view-chat" onclick="toggleMode('chat')" role="tab" aria-selected="false">
+                            <i class="fa-solid fa-comments me-2"></i>AI Assistant
                         </button>
                     </div>
-                </form>
-            </div>
+                </div>
 
-            <div id="chatInterface" style="display: none;">
-                <div class="chat-container glass-card mb-3" style="height: 400px; overflow-y: auto;" id="chatHistory">
-                    <div class="message assistant-message">
-                        <div class="message-bubble">
-                            <strong>MediAI:</strong> Hello! I'm your AI health assistant. How can I help you today?
+                <div id="view-diagnosis">
+                    <form action="/predict" method="post" class="mt-4" id="prediction-form" novalidate>
+                        {% if csrf_token %}
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        {% endif %}
+
+                        <div class="mb-4 position-relative">
+                            <label for="symptoms" class="form-label text-black-strong small text-uppercase fw-bold mb-2">Describe Symptoms</label>
+
+                            <div class="input-group input position-relative">
+                                <input type="text" id="symptoms" name="symptoms" class="modern-input rounded-4" placeholder="e.g. severe headache, nausea, stiff neck..." required aria-required="true" autocomplete="off" />
+                                <button type="button" id="startSpeechRecognition" class="btn mic-btn position-absolute end-0 top-50 translate-middle-y me-3" style="z-index:5;" aria-label="Start voice input">
+                                    <i class="fa-solid fa-microphone"></i>
+                                </button>
+                            </div>
+
+                            <div id="suggestions-container" class="suggestions position-absolute w-100 rounded mt-1 p-2 shadow-lg" style="display:none; z-index:10;" aria-hidden="true"></div>
+                            <div id="transcription" class="form-text text-highlight mt-2" aria-live="polite"></div>
+                        </div>
+
+                        <button type="submit" class="btn-modern btn-primary-glow w-100 justify-content-center" id="predictBtn" aria-live="polite">
+                            <span id="btnText">Run Analysis</span>
+                            <div id="btnSpinner" class="ai-loader ms-2 d-none" role="status" aria-hidden="true"></div>
+                        </button>
+                    </form>
+                </div>
+
+                <div id="view-chat" style="display: none;">
+                    <div class="chat-box mb-3" id="chatHistory" aria-live="polite" aria-label="Chat history">
+                        <div class="message msg-ai" role="article">
+                            <strong>Healix AI:</strong> Hello! I am your virtual health assistant. Describe your symptoms or ask me about a condition.
                         </div>
                     </div>
+
+                    <div class="chat-input-wrapper" role="group" aria-label="Chat input">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Type your health question..." aria-label="Chat input" />
+                        <button id="sendChatBtn" class="chat-send-btn" aria-label="Send chat message">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <input type="text" id="chatInput" class="form-control input-field" 
-                        placeholder="Describe your symptoms or ask a health question...">
-                    <button class="btn btn-gradient" id="sendChatBtn">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                    <button class="btn btn-gradient" id="chatSpeechBtn">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                </div>
             </div>
         </div>
-    </div>
+    </section>
 
     {% if predicted_disease %}
-    <div class="container my-5" style="margin-bottom: 100px;">
-        <h1 id="predictionHeading" class="text-center mb-4 gradient-text">Predicted Health Report</h1>
+    <section id="results" class="section-padding pt-0">
+        <div class="container">
+            <div class="text-center mb-5 reveal">
+                <h2 class="display-5 fw-bold">Analysis Complete</h2>
+                <p class="text-white-soft">Here is the AI-generated medical report based on your inputs.</p>
+            </div>
 
-        <div class="accordion gradient-accordion mb-5" id="healthReportAccordion">
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card glass-card h-100">
-                        <div class="card-header border-0 bg-transparent">Predicted Disease</div>
-                        <div class="card-body">
-                            <h4 class="card-title">{{ predicted_disease }}</h4>
-                        </div>
-                    </div>
+            <div class="bento-grid">
+                <div class="glass-panel bento-card reveal" style="grid-column: span 2; background: linear-gradient(145deg, rgba(94, 234, 212, 0.05), transparent);">
+                    <div class="bento-title"><i class="fa-solid fa-triangle-exclamation text-warning"></i> Primary Diagnosis</div>
+                    <h3 class="disease-highlight mb-3">{{ predicted_disease }}</h3>
+                    <p class="text-white-soft">{{ dis_des }}
+                        Confidence Level: <strong>{{ confidence }}%</strong>
+                    </p>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card glass-card h-100">
-                        <div class="card-header border-0 bg-transparent">Description</div>
-                        <div class="card-body">
-                            <p class="card-text">{{ dis_des }}</p>
-                        </div>
-                    </div>
+                <div class="glass-panel bento-card reveal">
+                    <div class="bento-title"><i class="fa-solid fa-pills" style="color: var(--primary)"></i> Medications</div>
+                    <ul class="custom-list list-unstyled">
+                        {% for med in medications %}
+                        <li>{{ med }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card glass-card h-100">
-                        <div class="card-header border-0 bg-transparent">Precautions</div>
-                        <div class="card-body">
-                            <ul class="mb-0">
-                                {% for item in my_precautions %}
-                                <li>{{ item }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
+                <div class="glass-panel bento-card reveal">
+                    <div class="bento-title"><i class="fa-solid fa-shield-virus" style="color: var(--secondary)"></i> Precautions</div>
+                    <ul class="custom-list list-unstyled">
+                        {% for item in my_precautions %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card glass-card h-100">
-                        <div class="card-header border-0 bg-transparent">Medications</div>
-                        <div class="card-body">
-                            <ul class="mb-0">
-                                {% for med in medications %}
-                                <li>{{ med }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
+                <div class="glass-panel bento-card reveal">
+                    <div class="bento-title"><i class="fa-solid fa-apple-whole text-danger"></i> Recommended Diet</div>
+                    <ul class="custom-list list-unstyled">
+                        {% for d in my_diet %}
+                        <li>{{ d }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card glass-card h-100">
-                        <div class="card-header border-0 bg-transparent">Workouts</div>
-                        <div class="card-body">
-                            <ul class="mb-0">
-                                {% for w in workout_list %}
-                                <li>{{ w }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
+                <div class="glass-panel bento-card reveal">
+                    <div class="bento-title"><i class="fa-solid fa-person-running text-warning"></i> Suggested Workout</div>
+                    <ul class="custom-list list-unstyled">
+                        {% for w in workout_list %}
+                        <li>{{ w }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card glass-card h-100">
-                        <div class="card-header border-0 bg-transparent">Recommended Diets</div>
-                        <div class="card-body">
-                            <ul class="mb-0">
-                                {% for d in my_diet %}
-                                <li>{{ d }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                <div class="glass-panel bento-card reveal">
+                    <h6 class="text-highlight mb-2">How the assessment was made</h6>
+                    <ul class="custom-list list-unstyled">
+                        {% for item in explanation %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="glass-panel bento-card reveal" style="grid-column: span 2; background: linear-gradient(145deg, rgba(94, 234, 212, 0.05), transparent);">
+                    <div class="bento-title"><i class="fa-solid fa-location-dot text-danger"></i> Next Steps</div>
+                    <p class="small text-white-soft mb-3">Find a specialist for {{ predicted_disease }} near you.</p>
+                    
+                    <a href="https://www.google.com/maps/search/{{ predicted_disease }}+doctor+near+me" target="_blank"
+                        class="btn-modern w-100 justify-content-center" style="background: rgba(255,255,255,0.1);">
+                        Open Maps
+                        <i class="fa-solid fa-external-link-alt ms-2"></i>
+                    </a>
+                </div>
+
+                <div class="glass-panel bento-card reveal" style="grid-column: 1 / -1; background: linear-gradient(145deg, rgba(94, 234, 212, 0.05), transparent);">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa-solid fa-circle-exclamation text-warning"></i>
+                        <h6 class="mb-0 text-highlight">Medical Disclaimer</h6>
                     </div>
+                    <p class="text-white-soft small mb-0">
+                        This AI-generated result is for informational purposes only and does not
+                        constitute medical advice, diagnosis, or treatment. Always consult a
+                        qualified healthcare professional for an accurate diagnosis and
+                        appropriate medical care.
+                    </p>
                 </div>
             </div>
         </div>
+    </section>
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+        <div id="resultToast" class="glass-panel p-3 text-white d-flex align-items-center gap-3" role="alert" aria-live="assertive" aria-atomic="true">
+            <i class="fa-solid fa-check-circle text-success fs-4"></i>
+            <div>
+                <strong>Diagnosis Ready</strong><br />
+                <small class="text-white-soft">Scroll down to view report.</small>
+            </div>
+            <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
     </div>
     {% endif %}
-    
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050; margin-bottom: 60px;">
-      <div id="resultToast" class="toast gradient-toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header bg-transparent text-white border-bottom border-white-50">
-          <strong class="me-auto">MediAI Notification</strong>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          Diagnosis completed successfully! Scroll down to see your results.
-        </div>
-      </div>
-    </div>
 
-    <div class="disclaimer">
-        <strong>Disclaimer:</strong> This AI system provides preliminary health information only and is developed solely for project purposes. Always consult a medical professional for diagnosis and treatment.
-    </div>
+    <footer class="container text-center py-5 border-top border-secondary border-opacity-10 mt-5">
+        <p class="text-white-soft small">
+            © 2025 HealixAI. <span class="text-warning">Disclaimer: AI predictions are for informational purposes only. Consult a doctor.</span>
+        </p>
+    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Speech Recognition
-        const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
+        // --- 1. GLOBAL VARIABLES ---
+        const symptomInput = document.getElementById('symptoms');
+        const suggestionsBox = document.getElementById('suggestions-container');
+        const speechBtn = document.getElementById('startSpeechRecognition');
         const transcriptionDiv = document.getElementById('transcription');
-
-        if (startSpeechRecognitionButton) {
-            startSpeechRecognitionButton.addEventListener('click', startSpeechRecognition);
-        }
-
-        function startSpeechRecognition() {
-            if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
-                alert("Speech recognition is not supported in your browser. Please use Chrome or Edge.");
-                return;
-            }
-
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = 'en-US';
-            recognition.continuous = false;
-            recognition.interimResults = false;
-
-            // Visual feedback
-            const button = document.getElementById('startSpeechRecognition');
-            const originalText = button.innerHTML;
-            button.innerHTML = '🎤 Listening...';
-            button.disabled = true;
-
-            recognition.onresult = function(event) {
-                const result = event.results[0][0].transcript;
-                transcriptionDiv.textContent = "Transcribed: " + result;
-                document.getElementById('symptoms').value = result;
-            };
-
-            recognition.onerror = function(event) {
-                console.error('Speech recognition error', event.error);
-                transcriptionDiv.textContent = "Error: " + event.error;
-            };
-
-            recognition.onend = function() {
-                button.innerHTML = originalText;
-                button.disabled = false;
-            };
-
-            recognition.start();
-        }
-
-        // Page Load Effects
-        document.documentElement.classList.add('fade');
-        window.addEventListener('DOMContentLoaded', () => {
-            document.documentElement.classList.remove('fade');
-        });
-
-        // Form Submission Handling
-        const form = document.querySelector('form[action="/predict"]');
-        const predictBtn = document.getElementById('predictBtn');
-        const btnText = document.getElementById('btnText');
-        const btnSpinner = document.getElementById('btnSpinner');
-
-        if (form) {
-            form.addEventListener('submit', () => {
-                if (predictBtn) predictBtn.disabled = true;
-                if (btnText) btnText.textContent = 'Predicting…';
-                if (btnSpinner) btnSpinner.classList.remove('d-none');
-            });
-        }
-
-        // Typing Animation
-        document.addEventListener("DOMContentLoaded", () => {
-            const fullText = "AI‑Powered Health Diagnosis System";
-            const typedText = document.getElementById("typed-text");
-            const typingSpeed = 100;
-            let i = 0;
-
-            function typeChar() {
-                if (i < fullText.length) {
-                    const char = fullText[i++];
-
-                    if (char === ' ') {
-                        typedText.appendChild(document.createTextNode(' '));
-                        const prevSpan = typedText.querySelector('span:last-child');
-                        if (prevSpan) prevSpan.classList.add('word-end');
-                    } else {
-                        const span = document.createElement("span");
-                        span.textContent = char;
-                        span.classList.add("gradient-char");
-                        typedText.appendChild(span);
-                    }
-                    setTimeout(typeChar, typingSpeed);
-                }
-            }
-            typeChar();
-        });
-
-        // Result Heading Animation
-        document.addEventListener('DOMContentLoaded', () => {
-            const heading = document.getElementById('predictionHeading');
-            if (heading) {
-                const io = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            heading.classList.add('visible');
-                        }
-                    });
-                }, { threshold: 0.3 });
-                io.observe(heading);
-            }
-        });
-        
-        // CORRECTED: Auto-complete functionality with Safe Parsing
-        // We use |default({}) to prevent crashing if normalized_symptoms is None or missing
-        const normalizedSymptoms = JSON.parse('{{ (normalized_symptoms|default({}))|tojson|safe }}');
-        const symptomsInput = document.getElementById('symptoms');
-        
-        if (symptomsInput) {
-            symptomsInput.addEventListener('input', function(e) {
-                const input = e.target.value.toLowerCase();
-                const lastCommaIndex = input.lastIndexOf(',');
-                const currentTerm = lastCommaIndex >= 0 
-                    ? input.substring(lastCommaIndex + 1).trim() 
-                    : input.trim();
-                
-                if (currentTerm.length > 2) {
-                    // Get matching symptoms
-                    const matches = Object.keys(normalizedSymptoms)
-                        .filter(symptom => symptom.includes(currentTerm))
-                        .map(symptom => normalizedSymptoms[symptom])
-                        .slice(0, 5);
-                    
-                    showSuggestions(matches);
-                } else {
-                    hideSuggestions();
-                }
-            });
-        }
-
-        // Show suggestions
-        function showSuggestions(matches) {
-            let container = document.getElementById('suggestions-container');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            if (matches.length > 0) {
-                matches.forEach(match => {
-                    const div = document.createElement('div');
-                    div.classList.add('suggestion-item');
-                    div.textContent = match;
-                    div.onclick = () => {
-                        const input = document.getElementById('symptoms');
-                        const text = input.value;
-                        const lastCommaIndex = text.lastIndexOf(',');
-                        
-                        if (lastCommaIndex >= 0) {
-                            // Replace only the last part of the text
-                            input.value = text.substring(0, lastCommaIndex + 1) + ' ' + match;
-                        } else {
-                            // Replace entire text if no commas
-                            input.value = match;
-                        }
-                        
-                        input.focus();
-                        hideSuggestions();
-                        
-                        // Set cursor position to end
-                        setTimeout(() => {
-                            input.selectionStart = input.selectionEnd = input.value.length;
-                        }, 0);
-                    };
-                    container.appendChild(div);
-                });
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
-        }
-
-        // Hide suggestions
-        function hideSuggestions() {
-            const container = document.getElementById('suggestions-container');
-            if (container) {
-                container.style.display = 'none';
-            }
-        }
-
-        // Hide suggestions when clicking elsewhere
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.suggestions-box') && 
-                e.target.id !== 'symptoms') {
-                hideSuggestions();
-            }
-        });
-        
-        // Particles.js Configuration
-        particlesJS("particles-js", {
-            particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: "#00e5ff" },
-                shape: { type: "circle" },
-                opacity: { value: 0.5, random: true },
-                size: { value: 3, random: true },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: "#7e57c2",
-                    opacity: 0.4,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: "none",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false
-                }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: true, mode: "repulse" },
-                    onclick: { enable: true, mode: "push" },
-                    resize: true
-                }
-            },
-            retina_detect: true
-        });
-
-        // Mode Toggling
-        const diagnosisModeBtn = document.getElementById('diagnosisModeBtn');
-        const chatModeBtn = document.getElementById('chatModeBtn');
-        const diagnosisForm = document.getElementById('diagnosisForm');
-        const chatInterface = document.getElementById('chatInterface');
-        
-        if (chatModeBtn && diagnosisModeBtn) {
-            chatModeBtn.addEventListener('click', () => {
-                diagnosisForm.style.display = 'none';
-                chatInterface.style.display = 'block';
-                diagnosisModeBtn.classList.remove('btn-gradient');
-                diagnosisModeBtn.classList.add('btn-outline-light');
-                chatModeBtn.classList.remove('btn-outline-light');
-                chatModeBtn.classList.add('btn-gradient');
-            });
-            
-            diagnosisModeBtn.addEventListener('click', () => {
-                chatInterface.style.display = 'none';
-                diagnosisForm.style.display = 'block';
-                chatModeBtn.classList.remove('btn-gradient');
-                chatModeBtn.classList.add('btn-outline-light');
-                diagnosisModeBtn.classList.remove('btn-outline-light');
-                diagnosisModeBtn.classList.add('btn-gradient');
-            });
-        }
-
-        // Chat Functionality
-        const chatHistory = document.getElementById('chatHistory');
         const chatInput = document.getElementById('chatInput');
-        const sendChatBtn = document.getElementById('sendChatBtn');
-        const chatSpeechBtn = document.getElementById('chatSpeechBtn');
-        
-        let chatMessages = [
-            { role: 'assistant', content: "Hello! I'm your AI health assistant. How can I help you today?" }
-        ];
-        
-        // CORRECTED: Security patch to prevent XSS (renders user input as text, not HTML)
-        function renderChat() {
-            if (!chatHistory) return;
-            chatHistory.innerHTML = '';
-            chatMessages.forEach(msg => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${msg.role}-message`;
-                
-                const bubble = document.createElement('div');
-                bubble.className = 'message-bubble';
-                
-                if (msg.role === 'assistant') {
-                    // Assistant messages are trusted and may contain buttons/HTML
-                    bubble.innerHTML = `<strong>MediAI:</strong> ${msg.content}`;
-                } else {
-                    // User messages are untrusted - render as text node
-                    const strong = document.createElement('strong');
-                    strong.textContent = 'You: ';
-                    bubble.appendChild(strong);
-                    bubble.appendChild(document.createTextNode(msg.content));
-                }
-                
-                messageDiv.appendChild(bubble);
-                chatHistory.appendChild(messageDiv);
-            });
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-        }
-        
-        function showTypingIndicator() {
-            if (!chatHistory) return null;
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'message assistant-message';
-            
-            const bubble = document.createElement('div');
-            bubble.className = 'message-bubble typing-indicator';
-            bubble.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            `;
-            
-            typingDiv.appendChild(bubble);
-            chatHistory.appendChild(typingDiv);
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-            
-            return typingDiv;
-        }
-        
-        async function sendChatMessage() {
-            const message = chatInput ? chatInput.value.trim() : '';
-            if (!message) return;
-            
-            // Add user message
-            chatMessages.push({ role: 'user', content: message });
-            renderChat();
-            if (chatInput) chatInput.value = '';
-            
-            // Show typing indicator
-            const typingIndicator = showTypingIndicator();
-            
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        // Keep the CSRF token just in case, even though your route is exempt
-                        {% if csrf_token is defined %}
-                        'X-CSRFToken': '{{ csrf_token() }}'
-                        {% endif %}
-                    },
-                    body: JSON.stringify({
-                        message: message
-                        // REMOVED: history: chatMessages 
-                        // REASON: Your main.py uses session['chat_history'], so the server remembers automatically.
-                    }),
-                    credentials: 'include' // <--- CRITICAL: This sends the session cookie
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                // Remove typing indicator
-                if (typingIndicator) typingIndicator.remove();
-                
-                if (data.error) {
-                    chatMessages.push({
-                        role: 'assistant',
-                        content: "Sorry, I encountered an error. Please try again."
-                    });
-                } else {
-                    // Handle both formats: direct response or history
-                    if (data.response) {
-                        chatMessages.push({
-                            role: 'assistant',
-                            content: data.response
-                        });
-                    } else if (data.history) {
-                        chatMessages = data.history;
-                    }
-                    
-                    // Check if we have a diagnosis
-                    const diagnosisMatch = data.response && data.response.match(/Predicted disease: (.+)/);
-                    if (diagnosisMatch) {
-                        const diseaseName = diagnosisMatch[1];
-                        
-                        // Get disease details
-                        const detailsResponse = await fetch('/api/disease-details', {
-                            method: 'POST',
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                {% if csrf_token is defined %}
-                                'X-CSRFToken': '{{ csrf_token() }}'
-                                {% endif %}
-                            },
-                            body: JSON.stringify({ disease: diseaseName }),
-                            credentials: 'include'
-                        });
-                        
-                        if (!detailsResponse.ok) {
-                            throw new Error(`Disease details error: ${detailsResponse.status}`);
-                        }
-                        
-                        const details = await detailsResponse.json();
-                        
-                        // Format disease information
-                        const diseaseInfo = `
-                            <div class="disease-card glass-card p-3 mt-2">
-                                <h5>Diagnosis: ${details.name}</h5>
-                                <p><strong>Description:</strong> ${details.description}</p>
-                                <div class="mt-2">
-                                    <button class="btn btn-sm btn-gradient" 
-                                        onclick="showDiseaseDetails('${details.name}')">
-                                        View Full Details
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                        
-                        chatMessages[chatMessages.length - 1].content += diseaseInfo;
-                    }
-                }
-                
-                renderChat();
-            } catch (error) {
-                console.error('Chat error:', error);
-                if (typingIndicator) typingIndicator.remove();
-                chatMessages.push({
-                    role: 'assistant',
-                    content: "I'm having trouble connecting. Please try again later."
-                });
-                renderChat();
+        const sendBtn = document.getElementById('sendChatBtn');
+        const chatHistory = document.getElementById('chatHistory');
+        const predictionForm = document.getElementById('prediction-form');
+
+        // --- 2. VIEW TOGGLING (Diagnosis vs Chat) ---
+        function toggleMode(mode) {
+            const diagView = document.getElementById('view-diagnosis');
+            const chatView = document.getElementById('view-chat');
+            const btnDiag = document.getElementById('btn-diagnosis');
+            const btnChat = document.getElementById('btn-chat');
+
+            if (mode === 'chat') {
+                diagView.style.display = 'none';
+                chatView.style.display = 'block';
+                chatView.classList.add('reveal', 'active');
+
+                btnDiag.classList.remove('active');
+                btnDiag.setAttribute('aria-selected', 'false');
+                btnChat.classList.add('active');
+                btnChat.setAttribute('aria-selected', 'true');
+
+                if (chatInput) chatInput.focus();
+            } else {
+                chatView.style.display = 'none';
+                diagView.style.display = 'block';
+
+                btnChat.classList.remove('active');
+                btnChat.setAttribute('aria-selected', 'false');
+                btnDiag.classList.add('active');
+                btnDiag.setAttribute('aria-selected', 'true');
             }
         }
-        
-        function showDiseaseDetails(diseaseName) {
-            alert(`Showing details for: ${diseaseName}`);
-        }
-        
-        // Speech recognition for chat
-        if (chatSpeechBtn) {
-            chatSpeechBtn.addEventListener('click', function() {
-                if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
-                    alert("Speech recognition is not supported in your browser. Please use Chrome or Edge.");
+
+        // --- 3. SCROLL REVEAL ANIMATION ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- 4. SPEECH RECOGNITION ---
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+
+        if (speechBtn) {
+            speechBtn.addEventListener('click', () => {
+                if (!window.SpeechRecognition) {
+                    alert("Your browser doesn't support the Web Speech API. Try Chrome or Edge.");
                     return;
                 }
 
-                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                const recognition = new window.SpeechRecognition();
                 recognition.lang = 'en-US';
-                recognition.continuous = false;
                 recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
 
-                // Visual feedback
-                const originalHTML = chatSpeechBtn.innerHTML;
-                chatSpeechBtn.innerHTML = '<i class="fas fa-microphone-alt-slash"></i>';
-                chatSpeechBtn.disabled = true;
+                // UI feedback
+                speechBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-primary"></i>';
+                transcriptionDiv.textContent = 'Listening...';
 
-                recognition.onresult = function(event) {
-                    const transcript = event.results[0][0].transcript;
-                    if (chatInput) chatInput.value = transcript;
+                recognition.onresult = (event) => {
+                    const result = event.results[0][0].transcript;
+                    if (symptomInput) symptomInput.value = result;
+                    transcriptionDiv.textContent = "Heard: " + result;
+                    speechBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+
+                    // Trigger suggestion logic manually after voice input
+                    symptomInput.dispatchEvent(new Event('input'));
                 };
 
-                recognition.onerror = function(event) {
-                    console.error('Chat speech recognition error', event.error);
+                recognition.onerror = (e) => {
+                    console.error('Speech error', e);
+                    transcriptionDiv.textContent = 'Voice input failed. Please try typing.';
+                    speechBtn.innerHTML = '<i class="fa-solid fa-microphone-slash text-danger"></i>';
+                    setTimeout(() => {
+                        speechBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+                    }, 1500);
                 };
 
-                recognition.onend = function() {
-                    chatSpeechBtn.innerHTML = originalHTML;
-                    chatSpeechBtn.disabled = false;
+                recognition.onend = () => {
+                    if (speechBtn.innerHTML.includes('spinner')) {
+                        speechBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+                    }
                 };
 
-                recognition.start();
+                try {
+                    recognition.start();
+                } catch (err) {
+                    console.warn('Recognition start error', err);
+                    transcriptionDiv.textContent = 'Voice input unavailable.';
+                    speechBtn.innerHTML = '<i class="fa-solid fa-microphone-slash text-danger"></i>';
+                    setTimeout(() => {
+                        speechBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+                    }, 1200);
+                }
             });
         }
-        
-        // Event listeners
-        if (sendChatBtn) sendChatBtn.addEventListener('click', sendChatMessage);
-        if (chatInput) {
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendChatMessage();
+
+        // --- 5. SMART SUGGESTIONS ---
+        if (suggestionsBox) {
+            suggestionsBox.style.backgroundColor = 'rgba(20, 20, 20, 0.95)';
+            suggestionsBox.style.backdropFilter = 'blur(10px)';
+            suggestionsBox.style.border = '1px solid rgba(94, 234, 212, 0.2)';
+        }
+
+        if (symptomInput && suggestionsBox) {
+            symptomInput.addEventListener('input', async function() {
+                const query = this.value;
+                if (query.length < 2) {
+                    suggestionsBox.style.display = 'none';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/api/suggest?q=${encodeURIComponent(query)}`);
+                    const symptoms = await response.json();
+
+                    if (symptoms.length > 0) {
+                        suggestionsBox.innerHTML = '';
+                        suggestionsBox.style.display = 'block';
+
+                        symptoms.forEach(sym => {
+                            const readable = sym.replace(/_/g, ' ');
+                            const capitalized = readable.charAt(0).toUpperCase() + readable.slice(1);
+
+                            const div = document.createElement('div');
+                            div.className = 'p-2 text-white-soft small border-bottom border-secondary border-opacity-10 suggestion-item';
+                            div.style.cursor = 'pointer';
+                            div.innerHTML = `<i class="fa-solid fa-plus text-primary me-2"></i>${capitalized}`;
+
+                            div.onclick = () => {
+                                const currentVal = symptomInput.value;
+                                const lastComma = currentVal.lastIndexOf(',');
+                                let newVal;
+                                if (lastComma !== -1) {
+                                    newVal = currentVal.substring(0, lastComma + 1).trim() + ' ' + sym;
+                                } else {
+                                    newVal = sym;
+                                }
+                                symptomInput.value = newVal + ', ';
+                                suggestionsBox.style.display = 'none';
+                                symptomInput.focus();
+                            };
+                            suggestionsBox.appendChild(div);
+                        });
+                    } else {
+                        suggestionsBox.style.display = 'none';
+                    }
+                } catch (e) {
+                    console.error("Suggestion error:", e);
+                }
+            });
+
+            // Hide suggestions on click outside
+            document.addEventListener('click', (e) => {
+                if (e.target !== symptomInput && e.target !== suggestionsBox) {
+                    suggestionsBox.style.display = 'none';
+                }
             });
         }
-        
-        // Initial render
-        renderChat();
 
-        // Toast Trigger
-        {% if predicted_disease %}
-        document.addEventListener('DOMContentLoaded', function() {
-            var toastEl = document.getElementById('resultToast');
-            if (toastEl) {
-                var toast = new bootstrap.Toast(toastEl);
-                toast.show();
+        // --- 6. FORM SUBMISSION UI ---
+        if (predictionForm) {
+            predictionForm.addEventListener('submit', () => {
+                const btn = document.getElementById('predictBtn');
+                const spinner = document.getElementById('btnSpinner');
+                const text = document.getElementById('btnText');
+
+                if (btn) btn.disabled = true;
+                if (text) text.textContent = 'Processing...';
+                if (spinner) spinner.classList.remove('d-none');
+                
+                // ✅ FIX 2: Hide suggestions box on form submit (Enter key or Button Click)
+                if (suggestionsBox) suggestionsBox.style.display = 'none';
+            });
+        }
+
+        // --- 7. CHAT LOGIC ---
+        async function sendMessage() {
+            const txt = chatInput.value.trim();
+            if (!txt) return;
+
+            // Disable the button so user can't click again
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.style.opacity = "0.5"; // Optional: makes it look disabled
+                sendBtn.style.cursor = "not-allowed";
             }
+
+            // 1. Show User Message
+            appendMessage('user', txt);
+            chatInput.value = '';
+
+            // 2. Show "Thinking..." text
+            const loaderId = "loader-" + Date.now();
+            const loaderDiv = document.createElement('div');
+            loaderDiv.className = 'message msg-ai';
+            loaderDiv.id = loaderId;
+            loaderDiv.innerHTML = `<strong>Healix AI:</strong> <div class="ai-content">Thinking...</div>`;
+
+            chatHistory.appendChild(loaderDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            try {
+                // 3. Send to Backend
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: txt
+                    })
+                });
+
+                const data = await res.json();
+
+                // 4. Remove the "Thinking..." message
+                const loader = document.getElementById(loaderId);
+                if (loader) loader.remove();
+
+                // 5. Show Real Response or Error
+                if (!res.ok || data.error) {
+                    const errorMsg = data.error || 'AI service unavailable.';
+                    appendMessage('ai', `⚠️ Error: ${errorMsg}`);
+                } else {
+                    appendMessage('ai', data.response);
+                }
+
+            } catch (err) {
+                console.error('Chat error:', err);
+                const loader = document.getElementById(loaderId);
+                if (loader) loader.remove();
+                appendMessage('ai', '❌ Network error. Please check your internet or server console.');
+            } finally {
+                // Re-enable the button when done (Success or Error)
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.style.opacity = "1";
+                    sendBtn.style.cursor = "pointer";
+                }
+                // Optional: Put focus back on input so user can type next question immediately
+                if (chatInput) chatInput.focus();
+            }
+        }
+
+        function appendMessage(role, text) {
+            const div = document.createElement('div');
+            div.className = `message ${role === 'user' ? 'msg-user' : 'msg-ai'}`;
+
+            if (role === 'ai') {
+                div.innerHTML = `<div class="ai-content"></div>`;
+                chatHistory.appendChild(div);
+
+                // Render Markdown safely
+                const contentDiv = div.querySelector('.ai-content');
+                if (typeof marked !== 'undefined') {
+                    contentDiv.innerHTML = marked.parse(text);
+                } else {
+                    contentDiv.textContent = text;
+                }
+            } else {
+                div.textContent = text;
+                chatHistory.appendChild(div);
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        if (sendBtn) {
+            sendBtn.addEventListener('click', sendMessage);
+            chatInput && chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        // --- 8. TYPEWRITER EFFECT ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const text = "AI-assisted symptom assessment in seconds.";
+            const el = document.getElementById("hero-typing");
+
+            if (!el) return;
+            el.textContent = "";
+            let index = 0;
+            const speed = 50;
+
+            function typeWriter() {
+                if (index < text.length) {
+                    el.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(typeWriter, speed);
+                }
+            }
+            typeWriter();
+        });
+
+        // --- 9. TOAST TRIGGER ---
+        {% if predicted_disease %}
+        window.addEventListener('load', () => {
+            const toastEl = document.getElementById('resultToast');
+            if (toastEl && bootstrap && bootstrap.Toast) new bootstrap.Toast(toastEl).show();
+            const res = document.getElementById('results');
+            if (res) res.scrollIntoView({
+                behavior: 'smooth'
+            });
         });
         {% endif %}
     </script>
 </body>
+
 </html>

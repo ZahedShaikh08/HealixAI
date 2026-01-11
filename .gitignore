@@ -1,6 +1,15 @@
-﻿venv/
+﻿# --- Security (CRITICAL) ---
 .env
-__pycache__/
-*.pkl
+
+# --- Environment & Settings ---
+venv/
 .idea/
-render.yaml
+.vscode/
+
+# --- Python Garbage Files ---
+__pycache__/
+*.pyc
+
+# --- Logs ---
+*.log
+app.log

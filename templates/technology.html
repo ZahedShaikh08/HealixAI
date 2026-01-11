@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealixAI | Technology</title>
+
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='img/Healix-ai_circle.png') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="floating-nav" role="navigation">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='img/Healix-ai.jpeg') }}"
+                 style="width: 35px; height: 35px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);">
+            HealixAI
+        </a>
+
+        <div class="d-none d-md-flex gap-4">
+            <a href="/" class="text-highlight">Diagnosis</a>
+            <a href="/technology" class="text-highlight">Technology</a>
+            <a href="/symptoms" class="text-highlight">Symptoms</a> </div>
+        </div>
+
+        <button class="btn border-0 text-white d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+            <i class="fa-solid fa-bars fs-4"></i>
+        </button>
+    </nav>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu"
+         style="background: var(--bg-deep); border-left: 1px solid rgba(94, 234, 212, 0.2);">
+        <div class="offcanvas-header">
+            <h5 class="text-highlight fw-bold">Menu</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column gap-4 p-4">
+            <a href="/" class="fs-4 text-white"><i class="fa-solid fa-stethoscope me-3 text-primary"></i>Diagnosis</a>
+            <a href="/technology" class="fs-4 text-white"><i class="fa-solid fa-microchip me-3 text-secondary"></i>Technology</a>
+            <a href="/symptoms" class="fs-4 text-white"><i class="fa-solid fa-list-ul me-3 text-warning"></i>Symptoms</a> </div>
+        </div>
+    </div>
+
+    <header class="hero container text-center">
+        <div class="reveal">
+            <img src="{{ url_for('static', filename='img/Healix-ai.jpeg') }}"
+                 style="width:90px;height:90px;border-radius:50%;box-shadow:0 0 40px rgba(94,234,212,0.4);"
+                 class="mb-4">
+
+            <h1 class="display-4 fw-bold">
+                How <span class="text-highlight">HealixAI</span> Works
+            </h1>
+
+            <p class="lead text-white-soft mx-auto" style="max-width:720px;">
+                A transparent, safety-first AI system designed to assist — not replace —
+                clinical reasoning.
+            </p>
+        </div>
+    </header>
+
+    <section class="section-padding pt-0">
+        <div class="container">
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <div class="crystal-panel reveal">
+                        <div class="crystal-icon">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Machine Learning Engine</h4>
+                        <p class="text-white-soft">
+                            HealixAI uses a supervised machine-learning model trained on
+                            structured symptom–condition data. User inputs are converted
+                            into symptom vectors and evaluated probabilistically.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="crystal-panel reveal">
+                        <div class="crystal-icon">
+                            <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Medical Safety Layer</h4>
+                        <p class="text-white-soft">
+                            Before any output is shown, HealixAI applies rule-based
+                            medical safety checks to prevent unsafe or misleading results,
+                            especially when symptoms are limited or non-specific.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="crystal-panel reveal">
+                        <div class="crystal-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Confidence & Severity Logic</h4>
+                        <p class="text-white-soft">
+                            Confidence levels are dynamically adjusted based on symptom
+                            specificity and count. Severity indicators help users
+                            understand urgency without claiming diagnosis certainty.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="crystal-panel reveal">
+                        <div class="crystal-icon">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">AI Assistant Interface</h4>
+                        <p class="text-white-soft">
+                            A conversational AI explains results in plain language,
+                            answers health-related questions, and always encourages
+                            professional medical consultation.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="crystal-panel reveal text-center">
+                        <div class="crystal-icon mx-auto">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <h4 class="fw-bold mb-2">Ethics, Privacy & Responsibility</h4>
+                        <p class="text-white-soft mx-auto" style="max-width:850px;">
+                            HealixAI does not store personal health data permanently,
+                            does not automate treatment decisions, and is built strictly
+                            as an AI-assisted health awareness system — not a medical authority.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding pt-0">
+        <div class="container">
+
+            <div class="text-center mb-5 reveal">
+                <h2 class="fw-bold">
+                    System <span class="text-highlight">Architecture Flow</span>
+                </h2>
+                <p class="text-white-soft mx-auto" style="max-width:720px;">
+                    HealixAI follows a transparent, step-by-step pipeline that ensures
+                    safety, explainability, and responsible AI-assisted assessment.
+                </p>
+            </div>
+
+            <div class="arch-zigzag">
+
+                <div class="arch-step arrow-right">
+                    <div class="arch-node glass-card-style">
+                        <div class="step-icon"><i class="fa-solid fa-keyboard"></i></div>
+                        <div class="step-number">01</div>
+                        <h5 class="fw-bold mt-3">User Symptom Input</h5>
+                        <p class="small text-white-soft">Text or voice-based symptom entry using natural language.</p>
+                    </div>
+                </div>
+
+                <div class="arch-step arrow-down">
+                    <div class="arch-node glass-card-style">
+                        <div class="step-icon"><i class="fa-solid fa-filter"></i></div>
+                        <div class="step-number">02</div>
+                        <h5 class="fw-bold mt-3">Symptom Normalization</h5>
+                        <p class="small text-white-soft">Input cleaning, alias mapping, and medical validation.</p>
+                    </div>
+                </div>
+
+                <div class="arch-step arrow-down">
+                    <div class="arch-node glass-card-style">
+                        <div class="step-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                        <div class="step-number">04</div>
+                        <h5 class="fw-bold mt-3">Medical Safety Layer</h5>
+                        <p class="small text-white-soft">Rule-based checks ensure safe assessment behavior.</p>
+                    </div>
+                </div>
+
+                <div class="arch-step arrow-left">
+                    <div class="arch-node glass-card-style">
+                        <div class="step-icon"><i class="fa-solid fa-brain"></i></div>
+                        <div class="step-number">03</div>
+                        <h5 class="fw-bold mt-3">ML Prediction Engine</h5>
+                        <p class="small text-white-soft">Supervised ML model evaluates symptom vectors.</p>
+                    </div>
+                </div>
+
+                <div class="arch-step arrow-right">
+                    <div class="arch-node glass-card-style">
+                        <div class="step-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <div class="step-number">05</div>
+                        <h5 class="fw-bold mt-3">Confidence Logic</h5>
+                        <p class="small text-white-soft">Communicates uncertainty and assessment strength.</p>
+                    </div>
+                </div>
+
+                <div class="arch-step">
+                    <div class="arch-node glass-card-style">
+                        <div class="step-icon"><i class="fa-solid fa-file-medical"></i></div>
+                        <div class="step-number">06</div>
+                        <h5 class="fw-bold mt-3">User-Facing Results</h5>
+                        <p class="small text-white-soft">Explainable output with guidance and disclaimers.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="container text-center py-5 border-top border-secondary border-opacity-10">
+        <p class="text-white-soft small">
+            &copy; 2025 HealixAI. <span class="text-warning">Disclaimer: AI predictions are for informational purposes only. Consult a doctor.</span>
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+
+</html>

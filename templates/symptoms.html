@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealixAI | Supported Symptoms</title>
+
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='img/Healix-ai_circle.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <nav class="floating-nav" role="navigation">
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='img/Healix-ai.jpeg') }}" 
+                 style="width: 35px; height: 35px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);">
+            HealixAI
+        </a>
+        <div class="d-none d-md-flex gap-4">
+            <a href="/" class="text-highlight">Diagnosis</a>
+            <a href="/technology" class="text-highlight">Technology</a>
+            <a href="/symptoms" class="text-highlight">Symptoms</a> </div>
+        <button class="btn border-0 text-white d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+            <i class="fa-solid fa-bars fs-4"></i>
+        </button>
+    </nav>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" 
+         style="background: var(--bg-deep); border-left: 1px solid rgba(94, 234, 212, 0.2);">
+        <div class="offcanvas-header">
+            <h5 class="text-highlight fw-bold">Menu</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column gap-4 p-4">
+            <a href="/" class="fs-4 text-white"><i class="fa-solid fa-stethoscope me-3 text-primary"></i>Diagnosis</a>
+            <a href="/technology" class="fs-4 text-white"><i class="fa-solid fa-microchip me-3 text-secondary"></i>Technology</a>
+            <a href="/symptoms" class="fs-4 text-highlight"><i class="fa-solid fa-list-ul me-3 text-warning"></i>Symptoms List</a>
+        </div>
+    </div>
+
+    <header class="hero container text-center pb-0">
+        <div class="reveal">
+            <div class="badge-inline mb-3">
+                <small class="text-highlight fw-bold">📚 Model Dataset Reference</small>
+            </div>
+            <h1 class="display-4 fw-bold mb-3">Supported <span class="text-highlight">Symptoms</span></h1>
+            <p class="text-white-soft mx-auto" style="max-width: 600px;">
+                Our AI model is trained on a specific medical dataset. For the most accurate results, please use the exact terminology listed below.
+            </p>
+        </div>
+    </header>
+
+    <section class="section-padding">
+        <div class="container">
+            
+            <div class="reveal mb-5 mx-auto" style="max-width: 500px;">
+                <div class="chat-input-wrapper p-2">
+                    <i class="fa-solid fa-search text-muted ms-3"></i>
+                    <input type="text" id="symptomSearch" class="chat-input ps-3" placeholder="Search for a symptom..." onkeyup="filterSymptoms()">
+                </div>
+            </div>
+
+            <div class="glass-panel p-4 reveal">
+                <div class="row g-3" id="symptomsList">
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">itching</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">skin_rash</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">nodal_skin_eruptions</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">continuous_sneezing</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">shivering</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">chills</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">joint_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">stomach_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">acidity</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">ulcers_on_tongue</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">muscle_wasting</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">vomiting</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">burning_micturition</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">spotting_urination</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">fatigue</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">weight_gain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">anxiety</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">cold_hands_and_feets</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">mood_swings</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">weight_loss</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">restlessness</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">lethargy</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">patches_in_throat</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">irregular_sugar_level</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">cough</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">high_fever</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">sunken_eyes</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">breathlessness</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">sweating</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">dehydration</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">indigestion</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">headache</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">yellowish_skin</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">dark_urine</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">nausea</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">loss_of_appetite</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">pain_behind_the_eyes</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">back_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">constipation</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">abdominal_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">diarrhoea</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">mild_fever</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">yellow_urine</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">yellowing_of_eyes</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">acute_liver_failure</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">fluid_overload</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">swelling_of_stomach</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">swelled_lymph_nodes</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">malaise</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">blurred_and_distorted_vision</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">phlegm</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">throat_irritation</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">redness_of_eyes</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">sinus_pressure</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">runny_nose</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">congestion</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">chest_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">weakness_in_limbs</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">fast_heart_rate</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">pain_during_bowel_movements</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">pain_in_anal_region</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">bloody_stool</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">irritation_in_anus</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">neck_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">dizziness</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">cramps</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">bruising</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">obesity</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">swollen_legs</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">swollen_blood_vessels</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">puffy_face_and_eyes</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">enlarged_thyroid</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">brittle_nails</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">swollen_extremeties</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">excessive_hunger</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">extra_marital_contacts</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">drying_and_tingling_lips</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">slurred_speech</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">knee_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">hip_joint_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">muscle_weakness</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">stiff_neck</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">swelling_joints</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">movement_stiffness</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">spinning_movements</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">loss_of_balance</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">unsteadiness</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">weakness_of_one_body_side</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">loss_of_smell</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">bladder_discomfort</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">foul_smell_of_urine</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">continuous_feel_of_urine</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">passage_of_gases</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">internal_itching</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">toxic_look_(typhos)</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">depression</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">irritability</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">muscle_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">altered_sensorium</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">red_spots_over_body</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">belly_pain</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">abnormal_menstruation</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">dischromic_patches</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">watering_from_eyes</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">increased_appetite</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">polyuria</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">family_history</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">mucoid_sputum</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">rusty_sputum</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">lack_of_concentration</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">visual_disturbances</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">receiving_blood_transfusion</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">receiving_unsterile_injections</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">coma</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">stomach_bleeding</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">distention_of_abdomen</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">history_of_alcohol_consumption</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">fluid_overload.1</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">blood_in_sputum</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">prominent_veins_on_calf</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">palpitations</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">painful_walking</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">pus_filled_pimples</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">blackheads</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">scurring</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">skin_peeling</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">silver_like_dusting</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">small_dents_in_nails</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">inflammatory_nails</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">blister</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">red_sore_around_nose</div></div>
+                    <div class="col-6 col-md-4 col-lg-3 symptom-item"><div class="symptom-tag" onclick="copyToClipboard(this)">yellow_crust_ooze</div></div>
+                    </div>
+
+                    </div>
+                
+                <div id="noResults" class="text-center text-white-soft mt-4" style="display:none;">
+                    <i class="fa-solid fa-ghost fs-3 mb-2 opacity-50"></i><br>
+                    No matching symptom found in our database.
+                </div>
+            </div>
+            
+            <div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 1100">
+                <div id="copyToast" class="glass-panel py-2 px-4 text-white small" style="display:none; border-radius: 50px;">
+                    <i class="fa-solid fa-check text-success me-2"></i> Copied to clipboard!
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="container text-center py-5 border-top border-secondary border-opacity-10 mt-5">
+        <p class="text-white-soft small">
+            © 2025 HealixAI. <span class="text-warning">Disclaimer: AI predictions are for informational purposes only. Consult a doctor.</span>
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Reveal Animation
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Search Filter Logic
+        function filterSymptoms() {
+            let input = document.getElementById('symptomSearch').value.toLowerCase();
+            let items = document.getElementsByClassName('symptom-item');
+            let hasVisible = false;
+
+            for (let i = 0; i < items.length; i++) {
+                let tag = items[i].getElementsByClassName('symptom-tag')[0];
+                let textValue = tag.textContent || tag.innerText;
+                
+                if (textValue.toLowerCase().indexOf(input) > -1) {
+                    items[i].style.display = "";
+                    hasVisible = true;
+                } else {
+                    items[i].style.display = "none";
+                }
+            }
+
+            document.getElementById('noResults').style.display = hasVisible ? "none" : "block";
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard(element) {
+            const text = element.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('copyToast');
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
